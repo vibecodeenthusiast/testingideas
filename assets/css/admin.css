@@ -1,0 +1,73 @@
+/* Стили для административной панели плагина Quiz Builder */
+.quiz-list table th,
+.quiz-list table td {
+    padding: 12px 8px;
+}
+
+.question-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+.question-item h3 {
+    margin-top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.answer-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.answer-item select {
+    min-width: 100px;
+}
+
+.answer-item input {
+    flex-grow: 1;
+}
+
+.add-answer,
+.remove-answer,
+.remove-question {
+    margin-left: 10px;
+}
+
+#questions-container {
+    margin-bottom: 20px;
+}
+
+.wp-list-table .column-actions {
+    width: 200px;
+}
+
+/* Стили для страницы банка вопросов */
+#add-question-section {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 30px;
+}
+
+.answer-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.answer-item input[type="text"] {
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+.answer-item select {
+    min-width: 100px;
+}
