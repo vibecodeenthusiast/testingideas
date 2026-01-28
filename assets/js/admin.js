@@ -207,10 +207,10 @@ jQuery(document).ready(function($) {
                     <td>
                         <div class="yes-no-answers">
                             <label><input type="radio" name="answers[0][is_correct]" value="1"> Yes</label>
+                            <input type="hidden" name="answers[0][content]" value="Yes">
                             <label><input type="radio" name="answers[1][is_correct]" value="1"> No</label>
+                            <input type="hidden" name="answers[1][content]" value="No">
                         </div>
-                        <input type="hidden" name="answers[0][content]" value="Yes">
-                        <input type="hidden" name="answers[1][content]" value="No">
                     </td>
                 </tr>
             `);
@@ -281,7 +281,7 @@ jQuery(document).ready(function($) {
                                 <div class="answer-row">
                                     <input type="text" name="answers[${index}][content]" value="${answer.content}" class="answer-input regular-text" placeholder="Answer text">
                                     ${question.type === 'single_choice' ? 
-                                        `<input type="checkbox" name="answers[${index}][is_correct]" value="1" ${answer.is_correct ? 'checked' : ''}> Correct` : 
+                                        `<input type="radio" name="answers[${index}][is_correct]" value="1" ${answer.is_correct ? 'checked' : ''}> Correct` : 
                                         `<input type="checkbox" name="answers[${index}][is_correct]" value="1" ${answer.is_correct ? 'checked' : ''}> Correct`
                                     }
                                     <input type="number" name="answers[${index}][weight]" value="${answer.weight}" placeholder="Weight" style="width: 60px; margin-left: 10px;">
@@ -298,20 +298,33 @@ jQuery(document).ready(function($) {
     
     function addAnswerRow(questionType) {
         var answersList = $('#answers-list');
-        var answerCount = answersList.find('.answer-row').length;
+        // Find the highest current index to avoid conflicts
+        var currentIndex = -1;
+        answersList.find('.answer-row input[name*="[content]"]').each(function() {
+            var name = $(this).attr('name');
+            var matches = name.match(/answers\[([0-9]+)\]\[content\]/);
+            if (matches && matches[1]) {
+                var idx = parseInt(matches[1]);
+                if (idx > currentIndex) {
+                    currentIndex = idx;
+                }
+            }
+        });
+        
+        var nextIndex = currentIndex + 1;
         
         var isCorrectField = '';
         if (questionType === 'single_choice') {
-            isCorrectField = '<input type="radio" name="answers_is_correct" value="' + answerCount + '"> Correct';
+            isCorrectField = '<input type="radio" name="answers[' + nextIndex + '][is_correct]" value="1"> Correct';
         } else if (questionType === 'multiple_choice') {
-            isCorrectField = '<input type="checkbox" name="answers[' + answerCount + '][is_correct]" value="1"> Correct';
+            isCorrectField = '<input type="checkbox" name="answers[' + nextIndex + '][is_correct]" value="1"> Correct';
         }
         
         var answerRow = `
             <div class="answer-row">
-                <input type="text" name="answers[` + answerCount + `][content]" class="answer-input regular-text" placeholder="Answer text">
+                <input type="text" name="answers[` + nextIndex + `][content]" class="answer-input regular-text" placeholder="Answer text">
                 ` + isCorrectField + `
-                <input type="number" name="answers[` + answerCount + `][weight]" value="0" placeholder="Weight" style="width: 60px; margin-left: 10px;">
+                <input type="number" name="answers[` + nextIndex + `][weight]" value="0" placeholder="Weight" style="width: 60px; margin-left: 10px;">
                 <button type="button" class="delete-answer-btn">×</button>
             </div>
         `;

@@ -24,10 +24,10 @@ class QuizSystemQuestionBank {
             return;
         }
         
-        // Handle form submissions
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['action']) && $_POST['action'] === 'save_question') {
-                $this->handle_save_question_request();
+        // Nonce verification for any potential direct form submissions
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nonce'])) {
+            if (!wp_verify_nonce($_POST['nonce'], 'quiz_system_nonce')) {
+                add_settings_error('quiz_system', 'error', 'Security check failed');
             }
         }
         

@@ -260,11 +260,21 @@ class QuizSystemDatabase {
             'title' => sanitize_text_field($data['title']),
             'type' => sanitize_key($data['type']),
             'content' => !empty($data['content']) ? wp_kses_post($data['content']) : '',
-            'quiz_id' => !empty($data['quiz_id']) ? intval($data['quiz_id']) : null,
             'question_order' => !empty($data['question_order']) ? intval($data['question_order']) : 0
         );
         
-        $format = array('%s', '%s', '%s', '%d', '%d');
+        // Add quiz_id only if it's not empty to avoid issues with NULL values
+        if (!empty($data['quiz_id'])) {
+            $question_data['quiz_id'] = intval($data['quiz_id']);
+        } else {
+            $question_data['quiz_id'] = null;
+        }
+
+        if (!empty($data['quiz_id'])) {
+            $format = array('%s', '%s', '%s', '%d', '%d');
+        } else {
+            $format = array('%s', '%s', '%s', null, '%d');
+        }
         
         if (!empty($data['id'])) {
             // Update existing question

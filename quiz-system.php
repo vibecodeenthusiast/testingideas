@@ -45,6 +45,11 @@ class QuizSystem {
         require_once QUIZ_SYSTEM_PLUGIN_PATH . 'includes/class-quiz-system-question-bank.php';
         require_once QUIZ_SYSTEM_PLUGIN_PATH . 'includes/class-quiz-system-quizzes.php';
         require_once QUIZ_SYSTEM_PLUGIN_PATH . 'includes/class-quiz-system-frontend.php';
+        
+        // Initialize classes that register their own hooks
+        new QuizSystemQuestionBank();
+        new QuizSystemQuizzes();
+        new QuizSystemFrontend();
     }
     
     public function activate() {
@@ -77,8 +82,7 @@ class QuizSystem {
             question_order int DEFAULT 0,
             created_at datetime DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            PRIMARY KEY (id),
-            FOREIGN KEY (quiz_id) REFERENCES {$wpdb->prefix}qs_quizzes(id) ON DELETE CASCADE
+            PRIMARY KEY (id)
         ) $charset_collate;";
         
         // Table for answers
@@ -91,8 +95,7 @@ class QuizSystem {
             weight int DEFAULT 0,
             answer_order int DEFAULT 0,
             created_at datetime DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id),
-            FOREIGN KEY (question_id) REFERENCES {$wpdb->prefix}qs_questions(id) ON DELETE CASCADE
+            PRIMARY KEY (id)
         ) $charset_collate;";
         
         // Table for results
@@ -104,8 +107,7 @@ class QuizSystem {
             answers_data text,
             score decimal(5,2),
             completed_at datetime DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id),
-            FOREIGN KEY (quiz_id) REFERENCES {$wpdb->prefix}qs_quizzes(id)
+            PRIMARY KEY (id)
         ) $charset_collate;";
         
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
